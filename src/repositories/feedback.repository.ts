@@ -37,4 +37,8 @@ export class FeedbackRepository {
     this.email_idMap.set(given.from, feedback.id);
     return feedback.getJSON();
   }
+
+  flushDb() {
+    this.db.flush();
+  }
 }

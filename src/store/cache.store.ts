@@ -22,4 +22,8 @@ export class Cache<T> extends Store<T> {
     Object.defineProperty(this.cacheStore, key, value);
     return this.cacheStore[key];
   }
+
+  flush() {
+    this.cacheStore = {};
+  }
 }

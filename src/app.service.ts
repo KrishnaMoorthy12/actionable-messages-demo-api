@@ -17,4 +17,8 @@ export class AppService {
   checkIfUserHasSubmittedFeedback(email: string): boolean {
     return this.feedbackRepo.getFeedbackByEmail(email) !== null;
   }
+
+  flushFeedbacks() {
+    return this.feedbackRepo.flushDb();
+  }
 }
