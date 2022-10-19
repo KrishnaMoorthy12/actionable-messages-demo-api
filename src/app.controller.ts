@@ -38,6 +38,7 @@ export class AppController {
 
   @Delete('/feedback/actions/flush')
   flushFeedbacks() {
-    return this.appService.flushFeedbacks();
+    const count = this.appService.flushFeedbacks();
+    return { status: 'deleted', count };
   }
 }

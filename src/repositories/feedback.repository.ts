@@ -38,7 +38,10 @@ export class FeedbackRepository {
     return feedback.getJSON();
   }
 
-  flushDb() {
+  flushDb(): number {
     this.db.flush();
+    const count = this.email_idMap.entries.length;
+    this.email_idMap.clear();
+    return count;
   }
 }
