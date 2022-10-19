@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { Store } from './store';
+import { Store } from './Store';
 
 export class Cache<T> extends Store<T> {
   private cacheStore: Record<string, T>;
