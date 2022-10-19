@@ -17,7 +17,7 @@ export class AppController {
   @Post('/feedback')
   submitFeedback(
     @Body() requestBody: IFeedback,
-    @Query('from') email: string,
+    @Query('email') email: string,
   ): IFeedback {
     return this.appService.saveFeedback(
       email,
@@ -26,9 +26,10 @@ export class AppController {
     );
   }
 
-  @Get('/feedback/:email')
-  isFeedbackSubmitted(@Param('email') email: string) {
-    return this.appService.checkIfUserHasSubmittedFeedback(email);
+  @Get('/feedback/actions/is-submitted')
+  isFeedbackSubmitted(@Query('email') email: string) {
+    const isSubmitted = this.appService.checkIfUserHasSubmittedFeedback(email);
+    return { status: 'success', is_submitted: isSubmitted };
   }
 
   @Get()
