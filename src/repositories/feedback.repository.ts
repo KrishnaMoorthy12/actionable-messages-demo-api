@@ -39,8 +39,9 @@ export class FeedbackRepository {
   }
 
   flushDb(): number {
-    this.db.flush();
     const count = this.email_idMap.entries.length;
+    console.debug(`Deleting... ${count} records from DB`);
+    this.db.flush();
     this.email_idMap.clear();
     return count;
   }
