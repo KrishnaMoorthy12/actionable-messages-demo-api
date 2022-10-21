@@ -1,9 +1,20 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { AppService } from './app.service';
 import { IFeedback } from './entities/Feedback';
 
 @Controller()
 export class AppController {
+  private static toggle = 0;
+  private static IMAGES = ['./static/Logo.png', './static/ScreenShot.jpg'];
   constructor(private readonly appService: AppService) {}
 
   @Post('/feedback')
@@ -27,6 +38,15 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Get('/dynamic-image')
+  getDynamicImage(@Res() res: Response) {
+    res.contentType(AppController.toggle == 0 ? 'png' : 'jpg');
+    AppController.toggle = AppController.toggle == 0 ? 1 : 0;
+    res.sendFile(AppController.IMAGES[AppController.toggle], {
+      root: __dirname,
+    });
   }
 
   @Delete('/feedback/actions/flush')
