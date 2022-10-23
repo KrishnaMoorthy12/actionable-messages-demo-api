@@ -1,7 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
+import { StorageEntity } from 'src/entities/StorageEntity';
 import { Store } from './Store';
 
-export class Cache<T> extends Store<T> {
+export class Cache<T extends StorageEntity<any>> extends Store<T> {
   private cacheStore: Record<string, T>;
 
   constructor() {

@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
+import { StorageEntity } from './StorageEntity';
 
-export class Feedback {
+export class Feedback implements StorageEntity<IFeedback> {
   readonly id: string;
   constructor(
     private from: string,
