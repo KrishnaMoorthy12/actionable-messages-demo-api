@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import fetch from 'node-fetch';
 import * as moustache from 'mustache';
+import fetch from 'node-fetch';
 import * as path from 'path';
 import puppeteer from 'puppeteer';
-import { IDynamicImage } from 'src/entities/DynamicImage';
+import { IDynamicImage } from '../entities/DynamicImage';
 
 import { DynamicImageRepository } from '../repositories/dynamic-image.repository';
 

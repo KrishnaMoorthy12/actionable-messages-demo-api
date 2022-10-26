@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { StorageEntity } from 'src/entities/StorageEntity';
+import { StorageEntity } from '../entities/StorageEntity';
 import { Store } from './Store';
 
 export class Cache<T extends StorageEntity<any>> extends Store<T> {
