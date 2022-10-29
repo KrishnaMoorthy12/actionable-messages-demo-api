@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as moustache from 'mustache';
 import fetch from 'node-fetch';
 import * as path from 'path';
+import { chromium } from 'playwright-chromium';
 import puppeteer from 'puppeteer';
 import { IDynamicImage } from '../entities/DynamicImage';
 
@@ -65,6 +66,26 @@ export class DynamicImageService {
     return filepath;
   }
 
+  private async takeScreenShotFromChrome(
+    html: string,
+    filename: string,
+    dimensions: IDynamicImage['dimensions'],
+  ) {
+    const browser = await chromium.launch();
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    page.setContent(html);
+    const filepath = path.join(process.cwd(), 'static', filename);
+    await page.screenshot({
+      quality: 100,
+      clip: { ...dimensions, x: 0, y: 0 },
+      omitBackground: true,
+      path: filepath,
+    });
+
+    return filepath;
+  }
+
   async generateDynamicImage(id: string, params: Record<string, string>) {
     const { component, apiEndPt, dimensions } = this.repo.getDynamicImageRecord(id);
     const compiledHtml = await this.getCompiledHtml(
@@ -75,7 +96,7 @@ export class DynamicImageService {
     console.debug({ compiledHtml });
     const html = this.getWrappedHtmlDoc(compiledHtml);
     console.debug({ html });
-    return this.takeScreenShot(html, 'sample.png', dimensions);
+    return this.takeScreenShotFromChrome(html, 'sample.png', dimensions);
   }
 
   createDynamicImg(diRecordDetails: IDynamicImage) {
