@@ -77,7 +77,6 @@ export class DynamicImageService {
     page.setContent(html);
     const filepath = path.join(process.cwd(), 'static', filename);
     await page.screenshot({
-      quality: 100,
       clip: { ...dimensions, x: 0, y: 0 },
       omitBackground: true,
       path: filepath,
