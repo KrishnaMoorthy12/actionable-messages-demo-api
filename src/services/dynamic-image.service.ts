@@ -95,7 +95,8 @@ export class DynamicImageService {
     console.debug({ compiledHtml });
     const html = this.getWrappedHtmlDoc(compiledHtml);
     console.debug({ html });
-    return this.takeScreenShotFromChrome(html, 'sample.png', dimensions);
+    // return this.takeScreenShotFromChrome(html, 'sample.png', dimensions);
+    return this.takeScreenShot(html, 'sample.png', dimensions);
   }
 
   createDynamicImg(diRecordDetails: IDynamicImage) {
