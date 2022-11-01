@@ -13,7 +13,7 @@ export class DynamicImageRepository {
         `<div style="width: 400px; height: 400px; background-color: dodgerblue; color: white; display: flex; align-items: center; justify-content: center">
           <h1>{{name}}</h1>
         </div>`,
-        'http://localhost:3000/dicto',
+        'http://localhost:5000/dicto',
         {
           height: 400,
           width: 400,
