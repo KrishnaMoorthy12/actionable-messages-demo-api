@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "main": "dist/main.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "postinstall": "node node_modules/puppeteer/install.js && npx playwright install",
     "prebuild": "rimraf dist",
