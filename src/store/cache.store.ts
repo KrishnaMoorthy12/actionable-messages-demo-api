@@ -12,7 +12,7 @@ export class Cache<T extends StorageEntity<any>> extends Store<T> {
 
   get(key: string): T {
     const item = this.cacheStore[key];
-    if (!item) throw new NotFoundException(`Item with ket ${key} does not exist`);
+    if (!item) throw new NotFoundException(`Item with key ${key} does not exist`);
     return item;
   }
 
