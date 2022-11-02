@@ -7,19 +7,17 @@ export class DynamicImageRepository {
   private db: Cache<DynamicImage> = new Cache<DynamicImage>();
 
   constructor() {
-    this.db.put(
-      '5ca5a12c-83d2-453b-8afe-d6eefed0bb7c',
-      new DynamicImage(
-        `<div style="width: 400px; height: 400px; background-color: dodgerblue; color: white; display: flex; align-items: center; justify-content: center">
+    const di = new DynamicImage(
+      `<div style="width: 400px; height: 400px; background-color: dodgerblue; color: white; display: flex; align-items: center; justify-content: center">
           <h1>{{name}}</h1>
         </div>`,
-        'http://localhost:5000/dicto',
-        {
-          height: 400,
-          width: 400,
-        },
-      ),
+      'http://localhost:5000/dicto',
+      {
+        height: 400,
+        width: 400,
+      },
     );
+    this.db.put(di.id, di);
   }
 
   getDynamicImageRecord(id: string): IDynamicImage {
