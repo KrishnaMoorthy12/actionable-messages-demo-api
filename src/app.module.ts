@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DynamicImageRepository } from './repositories/dynamic-image.repository';
@@ -8,6 +8,6 @@ import { DynamicImageService } from './services/dynamic-image.service';
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [AppService, FeedbackRepository, DynamicImageRepository, DynamicImageService],
+  providers: [AppService, FeedbackRepository, DynamicImageRepository, DynamicImageService, Logger],
 })
 export class AppModule {}
