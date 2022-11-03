@@ -9,6 +9,10 @@ export class Cache<T extends StorageEntity<any>> extends Store<T> {
   constructor() {
     super();
     this.cacheStore = {};
+
+    if (this.logger == undefined) {
+      this.logger = new Logger();
+    }
   }
 
   get(key: string): T {
@@ -18,13 +22,13 @@ export class Cache<T extends StorageEntity<any>> extends Store<T> {
   }
 
   put(key: string, value: T): T {
-    this.logger.debug({ key, value }, Cache.name);
+    this.logger.debug(JSON.stringify({ key, value }), Cache.name);
     if (this.cacheStore[key] !== undefined) {
       this.logger.debug(`Key already exist: ${this.cacheStore[key]}`, Cache.name);
       throw new BadRequestException('Key already exist');
     }
     this.cacheStore[key] = value;
-    this.logger.debug(`Inserted new record. DB:  ${this.cacheStore}`, Cache.name);
+    this.logger.debug(`Inserted new record. DB:  ${JSON.stringify(this.cacheStore)}`, Cache.name);
     return this.cacheStore[key];
   }
 
