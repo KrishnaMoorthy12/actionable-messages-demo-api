@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { Feedback, IFeedback } from '../entities/Feedback';
 import { Cache } from '../store/cache.store';
 
@@ -6,6 +6,7 @@ import { Cache } from '../store/cache.store';
 export class FeedbackRepository {
   private db: Cache<Feedback>;
   private email_idMap: Map<string, string>;
+  @Inject(Logger) private logger: Logger;
 
   constructor() {
     this.db = new Cache<Feedback>();
@@ -28,7 +29,7 @@ export class FeedbackRepository {
 
   addFeedback(given: IFeedback): IFeedback {
     if (this.email_idMap.has(given.from)) {
-      console.debug(FeedbackRepository.name, 'Already submitted');
+      this.logger.debug('Already submitted', FeedbackRepository.name);
       throw new BadRequestException('Feedback already submitted');
     }
 
@@ -40,7 +41,7 @@ export class FeedbackRepository {
 
   flushDb(): number {
     const count = Object.keys(this.email_idMap).length;
-    console.debug(`Deleting ${count} records from DB ...`);
+    this.logger.debug(`Deleting ${count} records from DB ...`, FeedbackRepository.name);
     this.db.flush();
     this.email_idMap.clear();
     return count;

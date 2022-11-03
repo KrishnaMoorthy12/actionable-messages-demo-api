@@ -1,9 +1,10 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { StorageEntity } from '../entities/StorageEntity';
 import { Store } from './Store';
 
 export class Cache<T extends StorageEntity<any>> extends Store<T> {
   private cacheStore: Record<string, T>;
+  @Inject(Logger) private logger: Logger;
 
   constructor() {
     super();
@@ -17,13 +18,13 @@ export class Cache<T extends StorageEntity<any>> extends Store<T> {
   }
 
   put(key: string, value: T): T {
-    console.debug(Cache.name, key, value);
+    this.logger.debug({ key, value }, Cache.name);
     if (this.cacheStore[key] !== undefined) {
-      console.debug(Cache.name, 'Key already exist', this.cacheStore[key]);
+      this.logger.debug(`Key already exist: ${this.cacheStore[key]}`, Cache.name);
       throw new BadRequestException('Key already exist');
     }
     this.cacheStore[key] = value;
-    console.debug(`Inserted new record. DB: `, this.cacheStore);
+    this.logger.debug(`Inserted new record. DB:  ${this.cacheStore}`, Cache.name);
     return this.cacheStore[key];
   }
 

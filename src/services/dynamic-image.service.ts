@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import * as moustache from 'mustache';
 import fetch from 'node-fetch';
 import * as path from 'path';
@@ -10,6 +10,7 @@ import { DynamicImageRepository } from '../repositories/dynamic-image.repository
 
 @Injectable()
 export class DynamicImageService {
+  @Inject(Logger) logger: Logger;
   constructor(@Inject(DynamicImageRepository) private repo: DynamicImageRepository) {}
 
   private async getCompiledHtml(
@@ -19,8 +20,9 @@ export class DynamicImageService {
   ): Promise<string> {
     const url = new URL(apiEndPt);
     url.search = queryParams.toString();
+
     const response = await (await fetch(url.href)).json();
-    console.debug(response);
+    this.logger.debug(response, DynamicImageService.name);
 
     return moustache.render(component, response);
   }
@@ -49,10 +51,10 @@ export class DynamicImageService {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
-    console.debug('Page launched');
+    this.logger.debug('Page launched', DynamicImageService.name);
     const filepath = path.join(process.cwd(), 'static', filename);
 
-    console.debug({ filepath });
+    this.logger.debug({ filepath }, DynamicImageService.name);
     await page.screenshot({
       path: filepath,
       captureBeyondViewport: true,
@@ -92,9 +94,9 @@ export class DynamicImageService {
       apiEndPt,
       new URLSearchParams(params),
     );
-    console.debug({ compiledHtml });
+    this.logger.debug({ compiledHtml }, DynamicImageService.name);
     const html = this.getWrappedHtmlDoc(compiledHtml);
-    console.debug({ html });
+    this.logger.debug({ html }, DynamicImageService.name);
     // return this.takeScreenShotFromChrome(html, 'sample.png', dimensions);
     return this.takeScreenShot(html, 'sample.png', dimensions);
   }
