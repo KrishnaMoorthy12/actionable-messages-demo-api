@@ -65,4 +65,9 @@ export class AppController {
     const diPath = await this.diService.generateDynamicImage(diRecordId, queryParams);
     res.contentType('png').sendFile(diPath);
   }
+
+  @Delete('/dynamic-image/actions/flush')
+  flushDynamicImagesDb() {
+    this.diService.flushDb();
+  }
 }

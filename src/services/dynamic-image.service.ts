@@ -4,8 +4,8 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import { chromium } from 'playwright-chromium';
 import puppeteer from 'puppeteer';
-import { IDynamicImage } from '../entities/DynamicImage';
 
+import { IDynamicImage } from '../entities/DynamicImage';
 import { DynamicImageRepository } from '../repositories/dynamic-image.repository';
 
 @Injectable()
@@ -18,6 +18,7 @@ export class DynamicImageService {
     apiEndPt: string,
     queryParams: URLSearchParams,
   ): Promise<string> {
+    this.logger.debug(apiEndPt);
     const url = new URL(apiEndPt);
     url.search = queryParams.toString();
 
@@ -88,7 +89,7 @@ export class DynamicImageService {
   }
 
   async generateDynamicImage(id: string, params: Record<string, string>) {
-    const { component, apiEndPt, dimensions } = this.repo.getDynamicImageRecord(id);
+    const { component, apiEndPt, dimensions } = await this.repo.getDynamicImageRecord(id);
     const compiledHtml = await this.getCompiledHtml(
       component,
       apiEndPt,
@@ -103,5 +104,10 @@ export class DynamicImageService {
 
   createDynamicImg(diRecordDetails: IDynamicImage) {
     return this.repo.addDIRecordEntry(diRecordDetails);
+  }
+
+  flushDb() {
+    this.logger.warn('Flushing the database...', DynamicImageService.name);
+    return this.repo.flush();
   }
 }
