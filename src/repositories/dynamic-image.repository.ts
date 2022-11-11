@@ -1,33 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { DynamicImage, IDynamicImage } from '../entities/DynamicImage';
-import { Application } from '../platform';
-import { Cache } from '../store/cache.store';
+import { FileDB, Store } from '../store';
 
 @Injectable()
 export class DynamicImageRepository {
-  private db: Cache<DynamicImage> = new Cache<DynamicImage>();
+  #db: Store<DynamicImage>;
 
   constructor() {
-    Application.getInstance().then((app) => {
-      const port = app.getRunningPort();
-      const apiUrl = `http://localhost:${port}/dicto`;
-      const template = `
-        <div style="width: 400px; height: 400px; background-color: dodgerblue; color: white; display: flex; align-items: center; justify-content: center">
-          <h1>{{name}}</h1>
-        </div>`;
-      const dimensions = { height: 400, width: 400 };
-      const di = new DynamicImage(template, apiUrl, dimensions);
-      this.db.put(di.id, di);
-    });
+    this.#db = new FileDB('di-db');
   }
 
-  getDynamicImageRecord(id: string): IDynamicImage {
-    return this.db.get(id)?.getJSON();
+  async getDynamicImageRecord(id: string): Promise<IDynamicImage> {
+    const diRecord = await this.#db.get(id);
+    return diRecord?.getJSON?.() ?? (diRecord as unknown as IDynamicImage);
   }
 
   addDIRecordEntry({ component, apiEndPt, dimensions }: IDynamicImage) {
     const diRecord = new DynamicImage(component, apiEndPt, dimensions);
-    this.db.put(diRecord.id, diRecord);
+    this.#db.put(diRecord.id, diRecord);
     return diRecord;
+  }
+
+  flush() {
+    this.#db.flush();
   }
 }
