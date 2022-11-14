@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AppService } from './app.service';
 import { IDynamicImage } from './entities/DynamicImage';
@@ -80,5 +80,10 @@ export class AppController {
   @Get('/lead/:name/favorite_products')
   getFavoriteProducts(@Param('name') name: string) {
     return this.appService.getFavs(name);
+  }
+
+  @Patch('/lead/:name/actions/update-favorites')
+  updateFavorites(@Param('name') name: string, @Body('favorite_products') favorites: string[]) {
+    return this.appService.updateFavs(name, favorites);
   }
 }

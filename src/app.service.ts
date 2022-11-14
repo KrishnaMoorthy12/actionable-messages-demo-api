@@ -32,4 +32,8 @@ export class AppService {
   getFavs(name: string): Promise<ILead['favorite_products']> {
     return this.leadRepo.getFavoriteProducts(name);
   }
+
+  updateFavs(name: string, favs: string[]) {
+    return this.leadRepo.updateFavoriteProducts(name, favs);
+  }
 }

@@ -18,7 +18,9 @@ export class LeadRepository {
     return lead.getJSON();
   }
 
-  async updateFavoriteProducts(name: string, favProducts: string[]) {}
+  async updateFavoriteProducts(name: string, favProducts: string[]) {
+    return this.#db.update(name, { favorite_products: favProducts });
+  }
 
   async getFavoriteProducts(name: string): Promise<ILead['favorite_products']> {
     const lead = await this.#db.get(name);
