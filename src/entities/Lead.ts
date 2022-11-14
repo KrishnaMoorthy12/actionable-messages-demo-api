@@ -1,10 +1,14 @@
 import { randomUUID } from 'crypto';
 import { StorageEntity } from './StorageEntity';
 
-export class Lead implements StorageEntity<ILead> {
+export class Lead implements StorageEntity<ILead>, ILead {
   readonly id: string;
 
-  constructor(private name: string, private email: string, private favorite_products: string[]) {
+  constructor(
+    public readonly name: string,
+    public readonly email: string,
+    public readonly favorite_products: string[],
+  ) {
     this.id = randomUUID();
   }
 
