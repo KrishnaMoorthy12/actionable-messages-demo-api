@@ -4,7 +4,7 @@ import { StorageEntity } from './StorageEntity';
 export class Lead implements StorageEntity<ILead> {
   readonly id: string;
 
-  constructor(private name: string, private email: string, private favoriteProducts: string[]) {
+  constructor(private name: string, private email: string, private favorite_products: string[]) {
     this.id = randomUUID();
   }
 
@@ -13,7 +13,7 @@ export class Lead implements StorageEntity<ILead> {
       id: this.id,
       name: this.name,
       email: this.email,
-      favorite_products: this.favoriteProducts,
+      favorite_products: this.favorite_products,
     };
   }
 }

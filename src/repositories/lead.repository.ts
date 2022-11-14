@@ -22,6 +22,7 @@ export class LeadRepository {
 
   async getFavoriteProducts(name: string): Promise<ILead['favorite_products']> {
     const lead = await this.#db.get(name);
-    return lead.getJSON().favorite_products;
+    if (!lead) return null;
+    return lead.getJSON?.().favorite_products ?? (lead as unknown as ILead).favorite_products;
   }
 }

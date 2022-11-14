@@ -28,4 +28,8 @@ export class AppService {
   addLead({ name, email, favorite_products }: ILead) {
     return this.leadRepo.addLead(name, email, favorite_products);
   }
+
+  getFavs(name: string): Promise<ILead['favorite_products']> {
+    return this.leadRepo.getFavoriteProducts(name);
+  }
 }

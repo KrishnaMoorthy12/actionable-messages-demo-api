@@ -76,4 +76,9 @@ export class AppController {
   addLead(@Body() body: ILead) {
     return this.appService.addLead(body);
   }
+
+  @Get('/lead/:name/favorite_products')
+  getFavoriteProducts(@Param('name') name: string) {
+    return this.appService.getFavs(name);
+  }
 }
