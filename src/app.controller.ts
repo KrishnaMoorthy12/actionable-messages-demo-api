@@ -78,8 +78,9 @@ export class AppController {
   }
 
   @Get('/lead/:name/favorite_products')
-  getFavoriteProducts(@Param('name') name: string) {
-    return this.appService.getFavs(name);
+  async getFavoriteProducts(@Param('name') name: string) {
+    const favs = await this.appService.getFavs(name);
+    return { favorite_products: favs };
   }
 
   @Patch('/lead/:name/actions/update-favorites')
