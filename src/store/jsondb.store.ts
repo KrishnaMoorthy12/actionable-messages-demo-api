@@ -14,7 +14,7 @@ export class FileDB<E, T extends StorageEntity<E>> extends Store<T> {
   }
 
   async get(key: string): Promise<T> {
-    const resource = (await this.#db.getData(key))[key] as Promise<T>;
+    const resource = (await this.#db.getData(key))[key] as T;
     if (!resource) throw new NotFoundException('Resource with given id does not exist');
     return resource;
   }
@@ -25,7 +25,8 @@ export class FileDB<E, T extends StorageEntity<E>> extends Store<T> {
   }
 
   async put(key: string, value: T): Promise<T> {
-    if (this.#db.exists(key)) throw new BadRequestException('Resource already exists');
+    if ((await this.#db.getData(key))[key])
+      throw new BadRequestException('Resource already exists');
     return this.putWithoutCheck(key, value);
   }
 
