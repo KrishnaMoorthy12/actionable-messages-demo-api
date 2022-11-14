@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { AppService } from './app.service';
 import { IDynamicImage } from './entities/DynamicImage';
 import { IFeedback } from './entities/Feedback';
+import { ILead } from './entities/Lead';
 import { DynamicImageService } from './services/dynamic-image.service';
 
 @Controller()
@@ -69,5 +70,10 @@ export class AppController {
   @Delete('/dynamic-image/actions/flush')
   flushDynamicImagesDb() {
     this.diService.flushDb();
+  }
+
+  @Post('/lead')
+  addLead(@Body() body: ILead) {
+    return this.appService.addLead(body);
   }
 }
