@@ -21,15 +21,25 @@ export class Cache<T extends StorageEntity<any>> extends Store<T> {
     return item;
   }
 
+  private putWithoutCheck(key: string, value: T): T {
+    this.cacheStore[key] = value;
+    this.logger.debug(`Inserted new record. DB:  ${JSON.stringify(this.cacheStore)}`, Cache.name);
+    return this.cacheStore[key];
+  }
+
   put(key: string, value: T): T {
     this.logger.debug(JSON.stringify({ key, value }), Cache.name);
     if (this.cacheStore[key] !== undefined) {
       this.logger.debug(`Key already exist: ${this.cacheStore[key]}`, Cache.name);
       throw new BadRequestException('Key already exist');
     }
-    this.cacheStore[key] = value;
-    this.logger.debug(`Inserted new record. DB:  ${JSON.stringify(this.cacheStore)}`, Cache.name);
-    return this.cacheStore[key];
+
+    return this.putWithoutCheck(key, value);
+  }
+
+  update(key: string, value: Partial<T>): T | Promise<T> {
+    const currentValue = this.get(key);
+    return this.putWithoutCheck(key, { ...currentValue, ...value });
   }
 
   flush() {

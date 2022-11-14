@@ -19,7 +19,7 @@ export class FileDB<E, T extends StorageEntity<E>> extends Store<T> {
     return resource;
   }
 
-  async putWithoutCheck(key: string, value: T) {
+  private async putWithoutCheck(key: string, value: T) {
     await this.#db.push(this.ROOT_PATH, { [key]: value }, false);
     return value;
   }
@@ -29,9 +29,11 @@ export class FileDB<E, T extends StorageEntity<E>> extends Store<T> {
     return this.putWithoutCheck(key, value);
   }
 
-  async update(key: string, value: T): Promise<T> {
+  async update(key: string, value: Partial<T>): Promise<T> {
+    const existingValue = await this.get(key);
+    value = { ...existingValue, ...value };
     await this.#db.delete(key);
-    return this.putWithoutCheck(key, value);
+    return this.putWithoutCheck(key, value as T);
   }
 
   flush() {
