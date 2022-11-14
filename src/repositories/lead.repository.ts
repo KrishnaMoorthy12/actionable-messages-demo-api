@@ -27,4 +27,10 @@ export class LeadRepository {
     if (!lead) return null;
     return lead.getJSON?.().favorite_products ?? (lead as unknown as ILead).favorite_products;
   }
+
+  async getLead(name: string) {
+    const lead = await this.#db.get(name);
+    if (!lead) return null;
+    return lead.getJSON?.() ?? (lead as unknown as ILead);
+  }
 }

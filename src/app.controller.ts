@@ -77,6 +77,11 @@ export class AppController {
     return this.appService.addLead(body);
   }
 
+  @Get('/lead')
+  getLead(@Query('name') name: string) {
+    return this.appService.getLead(name);
+  }
+
   @Get('/lead/:name/favorite_products')
   async getFavoriteProducts(@Param('name') name: string) {
     const favs = await this.appService.getFavs(name);
