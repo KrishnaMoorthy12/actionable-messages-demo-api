@@ -4,6 +4,8 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import { chromium } from 'playwright-chromium';
 import puppeteer from 'puppeteer';
+import { Browser, Dimensions } from '../utilities';
+import { PuppeteerBrowser } from '../browsers';
 
 import { IDynamicImage } from '../entities/DynamicImage';
 import { DynamicImageRepository } from '../repositories/dynamic-image.repository';
@@ -13,11 +15,7 @@ export class DynamicImageService {
   @Inject(Logger) logger: Logger;
   constructor(@Inject(DynamicImageRepository) private repo: DynamicImageRepository) {}
 
-  private async getCompiledHtml(
-    component: string,
-    apiEndPt: string,
-    queryParams: URLSearchParams,
-  ): Promise<string> {
+  private async getCompiledHtml(component: string, apiEndPt: string, queryParams: URLSearchParams): Promise<string> {
     this.logger.debug(apiEndPt);
     const url = new URL(apiEndPt);
     url.search = queryParams.toString();
@@ -44,11 +42,7 @@ export class DynamicImageService {
     `;
   }
 
-  private async takeScreenShot(
-    html: string,
-    filename: string,
-    dimensions: IDynamicImage['dimensions'],
-  ) {
+  private async takeScreenShot(html: string, filename: string, dimensions: IDynamicImage['dimensions']) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
@@ -69,11 +63,7 @@ export class DynamicImageService {
     return filepath;
   }
 
-  private async takeScreenShotFromChrome(
-    html: string,
-    filename: string,
-    dimensions: IDynamicImage['dimensions'],
-  ) {
+  private async takeScreenShotFromChrome(html: string, filename: string, dimensions: IDynamicImage['dimensions']) {
     const browser = await chromium.launch();
     const ctx = await browser.newContext();
     const page = await ctx.newPage();
@@ -88,18 +78,33 @@ export class DynamicImageService {
     return filepath;
   }
 
-  async generateDynamicImage(id: string, params: Record<string, string>) {
-    const { component, apiEndPt, dimensions } = await this.repo.getDynamicImageRecord(id);
-    const compiledHtml = await this.getCompiledHtml(
-      component,
-      apiEndPt,
-      new URLSearchParams(params),
-    );
+  private async getHtmlPageFromTemplate(
+    template: string,
+    apiEndPoint: string,
+    queryParams: URLSearchParams,
+  ): Promise<string> {
+    const compiledHtml = await this.getCompiledHtml(template, apiEndPoint, queryParams);
     this.logger.debug({ compiledHtml }, DynamicImageService.name);
+
     const html = this.getWrappedHtmlDoc(compiledHtml);
     this.logger.debug({ html }, DynamicImageService.name);
-    // return this.takeScreenShotFromChrome(html, 'sample.png', dimensions);
-    return this.takeScreenShot(html, 'sample.png', dimensions);
+    return html;
+  }
+
+  private async launchBrowserAndCapture(html: string, screenshotPath: string, dimensions: Dimensions) {
+    const browser = Browser.getInstance(PuppeteerBrowser);
+    await browser.launch();
+    await browser.open(html);
+    return browser.capture(screenshotPath, dimensions);
+  }
+
+  async generateDynamicImage(id: string, params: Record<string, string>): Promise<string> {
+    const { component, apiEndPt, dimensions } = await this.repo.getDynamicImageRecord(id);
+    const html = await this.getHtmlPageFromTemplate(component, apiEndPt, new URLSearchParams(params));
+    const filepath = path.join(process.cwd(), 'static', 'sample.png');
+
+    this.logger.debug(`Screenshot saved to ${filepath}`, DynamicImageService.name);
+    return this.launchBrowserAndCapture(html, filepath, dimensions);
   }
 
   createDynamicImg(diRecordDetails: IDynamicImage) {
