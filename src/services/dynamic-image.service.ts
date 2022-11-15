@@ -4,10 +4,10 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import { chromium } from 'playwright-chromium';
 import puppeteer from 'puppeteer';
-import { Browser, Dimensions } from '../utilities';
-import { PuppeteerBrowser } from '../browsers';
 
-import { IDynamicImage } from '../entities/DynamicImage';
+import { PuppeteerBrowser } from '../browsers';
+import { Browser, Dimensions } from '../utilities';
+import { IDynamicImage } from '../entities';
 import { DynamicImageRepository } from '../repositories/dynamic-image.repository';
 
 @Injectable()
