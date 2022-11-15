@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import Deprecated from 'deprecated-decorator';
 import * as moustache from 'mustache';
 import fetch from 'node-fetch';
 import * as path from 'path';
@@ -42,6 +43,10 @@ export class DynamicImageService {
     `;
   }
 
+  /**
+   * @deprecated use launchBrowserAndCapture instead
+   */
+  @Deprecated({ alternative: 'launchBrowserAndCapture' })
   private async takeScreenShot(html: string, filename: string, dimensions: IDynamicImage['dimensions']) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -63,6 +68,10 @@ export class DynamicImageService {
     return filepath;
   }
 
+  /**
+   * @deprecated use launchBrowserAndCapture instead
+   */
+  @Deprecated({ alternative: 'launchBrowserAndCapture' })
   private async takeScreenShotFromChrome(html: string, filename: string, dimensions: IDynamicImage['dimensions']) {
     const browser = await chromium.launch();
     const ctx = await browser.newContext();
