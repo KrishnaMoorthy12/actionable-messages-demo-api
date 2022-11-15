@@ -1,7 +1,8 @@
 import { Launchable } from '../interfaces';
 
 export abstract class Browser implements Launchable {
-  protected launched = false;
+  protected state = BrowserLifeCycleSates.DEAD;
+
   abstract launch(): Promise<void>;
   abstract open(htmlOrUrl: string | URL): Promise<void>;
   abstract capture(filepath: string, dimensions: Dimensions): Promise<string>;
@@ -13,12 +14,8 @@ export abstract class Browser implements Launchable {
     return Browser.SINGLETON;
   }
 
-  protected setLaunched(launched: boolean) {
-    this.launched = launched;
-  }
-
   isLaunched(): boolean {
-    return this.launched;
+    return this.state !== BrowserLifeCycleSates.DEAD;
   }
 }
 
@@ -29,4 +26,19 @@ export interface Dimensions {
 
 interface BrowserImplClass {
   new (): Browser;
+}
+
+export class IllegalBrowserStateException extends Error {
+  constructor(currentState: BrowserLifeCycleSates, expectedState: BrowserLifeCycleSates, customMessage?: string) {
+    super(
+      customMessage || `Incorrect state of browser. Current state: ${currentState}, expected state: ${expectedState}`,
+    );
+  }
+}
+
+export enum BrowserLifeCycleSates {
+  DEAD = 'dead',
+  READY = 'ready',
+  BUSY = 'busy',
+  OPEN = 'open',
 }
