@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import Deprecated from 'deprecated-decorator';
-import * as moustache from 'mustache';
+import * as mustache from 'mustache';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import { chromium } from 'playwright-chromium';
@@ -24,7 +24,7 @@ export class DynamicImageService {
     const response = await (await fetch(url.href)).json();
     this.logger.debug(response, DynamicImageService.name);
 
-    return moustache.render(component, response);
+    return mustache.render(component, response);
   }
 
   private getWrappedHtmlDoc(innerHtml: string, styles?: string, clientScript?: string): string {
