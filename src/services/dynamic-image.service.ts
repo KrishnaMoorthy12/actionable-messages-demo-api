@@ -2,6 +2,8 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import Deprecated from 'deprecated-decorator';
 import * as mustache from 'mustache';
 import fetch from 'node-fetch';
+import * as fsSync from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
 import { chromium } from 'playwright-chromium';
 import puppeteer from 'puppeteer';
@@ -110,6 +112,11 @@ export class DynamicImageService {
   async generateDynamicImage(id: string, params: Record<string, string>): Promise<string> {
     const { component, apiEndPt, dimensions } = await this.repo.getDynamicImageRecord(id);
     const html = await this.getHtmlPageFromTemplate(component, apiEndPt, new URLSearchParams(params));
+
+    const dir = path.join(process.cwd(), 'static');
+    if (!fsSync.existsSync(dir)) {
+      await fs.mkdir(dir);
+    }
     const filepath = path.join(process.cwd(), 'static', 'sample.png');
 
     this.logger.debug(`Screenshot saved to ${filepath}`, DynamicImageService.name);
