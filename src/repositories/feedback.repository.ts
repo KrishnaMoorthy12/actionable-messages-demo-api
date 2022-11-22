@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
-import { Feedback, IFeedback } from '../entities/Feedback';
-import { Cache } from '../store/cache.store';
+import { Feedback, IFeedback } from '../entities';
+import { Cache } from '../store';
 
 @Injectable()
 export class FeedbackRepository {

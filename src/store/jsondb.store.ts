@@ -25,8 +25,7 @@ export class FileDB<E, T extends StorageEntity<E>> extends Store<T> {
   }
 
   async put(key: string, value: T): Promise<T> {
-    if ((await this.#db.getData(key))[key])
-      throw new BadRequestException('Resource already exists');
+    if ((await this.#db.getData(key))[key]) throw new BadRequestException('Resource already exists');
     return this.putWithoutCheck(key, value);
   }
 

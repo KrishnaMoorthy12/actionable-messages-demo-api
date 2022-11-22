@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IFeedback } from './entities/Feedback';
-import { ILead } from './entities/Lead';
-import { FeedbackRepository } from './repositories/feedback.repository';
-import { LeadRepository } from './repositories/lead.repository';
+import { IFeedback, ILead } from './entities';
+import { FeedbackRepository, LeadRepository } from './repositories';
 
 @Injectable()
 export class AppService {

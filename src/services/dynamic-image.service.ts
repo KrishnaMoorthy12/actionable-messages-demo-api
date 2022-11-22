@@ -11,7 +11,7 @@ import puppeteer from 'puppeteer';
 import { PuppeteerBrowser } from '../browsers';
 import { Browser, Dimensions } from '../utilities';
 import { IDynamicImage } from '../entities';
-import { DynamicImageRepository } from '../repositories/dynamic-image.repository';
+import { DynamicImageRepository } from '../repositories';
 
 @Injectable()
 export class DynamicImageService {
@@ -114,9 +114,8 @@ export class DynamicImageService {
     const html = await this.getHtmlPageFromTemplate(component, apiEndPt, new URLSearchParams(params));
 
     const dir = path.join(process.cwd(), 'static');
-    if (!fsSync.existsSync(dir)) {
-      await fs.mkdir(dir);
-    }
+    if (!fsSync.existsSync(dir)) await fs.mkdir(dir);
+
     const filepath = path.join(process.cwd(), 'static', 'sample.png');
 
     this.logger.debug(`Screenshot saved to ${filepath}`, DynamicImageService.name);

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ILead, Lead } from '../entities/Lead';
+import { ILead, Lead } from '../entities';
 import { FileDB, Store } from '../store';
 
 @Injectable()

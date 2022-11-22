@@ -1,19 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AppService } from './app.service';
-import { IDynamicImage } from './entities/DynamicImage';
-import { IFeedback } from './entities/Feedback';
-import { ILead } from './entities/Lead';
-import { DynamicImageService } from './services/dynamic-image.service';
+import { IDynamicImage, IFeedback, ILead } from './entities';
+import { DynamicImageService } from './services';
 
 @Controller()
 export class AppController {
   private static toggle = 0;
   private static IMAGES = ['./static/Logo.png', './static/ScreenShot.jpg'];
-  constructor(
-    private readonly appService: AppService,
-    private readonly diService: DynamicImageService,
-  ) {}
+  constructor(private readonly appService: AppService, private readonly diService: DynamicImageService) {}
 
   @Get()
   getHello(): string {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DynamicImage, IDynamicImage } from '../entities/DynamicImage';
+import { DynamicImage, IDynamicImage } from '../entities';
 import { FileDB, Store } from '../store';
 
 @Injectable()
